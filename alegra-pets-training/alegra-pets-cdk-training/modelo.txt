@@ -1,0 +1,25 @@
+Entidad
+id
+nombre
+type: [usuario,fundacion]
+email
+password
+
+lambda
+crear
+
+
+
+
+
+
+
+animales
+
+id
+estado
+tipoAnimal
+raza
+color
+nombre
+
