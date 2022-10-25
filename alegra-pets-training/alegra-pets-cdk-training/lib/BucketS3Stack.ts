@@ -10,7 +10,7 @@ export class BucketS3Stack extends cdk.Stack {
     constructor(scope: Construct, id: string, props: DynamoStackCustom) {
     super(scope, id, getCdkPropsFromCustomProps(props));
     
-    const { createEntity  } = props.lambdaStack; //todas las lambdas
+    const { createEntity ,   } = props.lambdaStack; //todas las lambdas
 
     const bucket = new S3.Bucket(this,"bucket",{
         bucketName: getDefaultResourceName(props,"bucket"),

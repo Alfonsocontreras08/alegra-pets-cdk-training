@@ -15,7 +15,7 @@ export class DynamoDBStack extends cdk.Stack {
     this.PetTable = new DynamoDB.Table(this,getDefaultResourceName(props,"DynamoDBTable-pets"),{
       partitionKey:{
         name:"id",
-        type:DynamoDB.AttributeType.NUMBER
+        type:DynamoDB.AttributeType.STRING
       },
       tableName: getDefaultResourceName(props,"DynamoDBTable-pets")
     });
@@ -23,7 +23,7 @@ export class DynamoDBStack extends cdk.Stack {
     this.EntityTable = new DynamoDB.Table(this,getDefaultResourceName(props,"DynamoDBTable-entity"),{
       partitionKey:{
         name:"id",
-        type:DynamoDB.AttributeType.NUMBER
+        type:DynamoDB.AttributeType.STRING
       },
       tableName: getDefaultResourceName(props,"DynamoDBTable-entity")
     });
