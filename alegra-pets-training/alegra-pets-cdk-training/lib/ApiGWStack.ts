@@ -22,8 +22,15 @@ export class ApiGWStack extends cdk.Stack {
           allowHeaders: [
             'Content-Type',
             'X-Amz-Date',
+            'X-Amz-Security-Token',
             'Authorization',
+            'authorizationToken',
             'X-Api-Key',
+            'X-Requested-With',
+            'Accept',
+            'Access-Control-Allow-Methods',
+            'Access-Control-Allow-Origin',
+            'Access-Control-Allow-Headers',
           ],
           allowMethods: [ 'GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
           allowCredentials: true,
@@ -37,7 +44,7 @@ export class ApiGWStack extends cdk.Stack {
     */ 
     const authLambda = new Lambda.Function(this,getDefaultResourceName(props,"lambda-Auth"),{
       functionName:getDefaultResourceName(props,"auth"),
-      code:Lambda.Code.fromAsset("../alegra-pets-backend-training"),
+      code:Lambda.Code.fromAsset("../alegra-pets-backend-training/lambdas/authorizer"),
       handler:"alegra-pets-lambda-authorizer.handler",
       runtime:Lambda.Runtime.NODEJS_16_X,
       /* environment: {
@@ -88,7 +95,7 @@ export class ApiGWStack extends cdk.Stack {
 
     pets.addMethod('DELETE', 
     new ApiGW.LambdaIntegration(deletePet),{
-      authorizer: auth
+      //authorizer: auth
     });
 
     

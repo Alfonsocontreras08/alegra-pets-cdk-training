@@ -4,6 +4,8 @@ import * as Lambda from "aws-cdk-lib/aws-lambda";
 
 import { getCdkPropsFromCustomProps, getDefaultResourceName } from '../utils';
 import { LambdaStackCustom, StackBasicProps } from '../interface';
+import { CfnOutcome } from 'aws-cdk-lib/aws-frauddetector';
+import { CfnInclude } from 'aws-cdk-lib/cloudformation-include';
 
 export class LambdaStack extends cdk.Stack {
     public createEntity:Lambda.Function;
@@ -27,33 +29,37 @@ export class LambdaStack extends cdk.Stack {
             description: 'lambda comun con uuid y sdk',
         });
 
+        const s3BucketName = cdk.Fn.importValue("s3-bucket-name-output");
+
         //////// Funciones  /////
         this.createEntity = new Lambda.Function(this,getDefaultResourceName(props,"lambda-CreateEntity"),{
             functionName:getDefaultResourceName(props,"create-entity"),
-            code: Lambda.Code.fromAsset("../alegra-pets-backend-training"),
+            code: Lambda.Code.fromAsset("../alegra-pets-backend-training/lambdas/entity/create"),
             handler:"alegra-pets-lambda-create-entity.handler",
             runtime:Lambda.Runtime.NODEJS_16_X,
             layers:[commonLayer],
             environment: {
-                TABLA_NAME: EntityTable.tableName
+                TABLA_NAME: EntityTable.tableName,
+                S3_Bucket_Name: s3BucketName
             },
         });
        
        this.createPet = new Lambda.Function(this,getDefaultResourceName(props,"lambda-CreatePet"),{
             functionName:getDefaultResourceName(props,"create-pet"),
-            code:Lambda.Code.fromAsset("../alegra-pets-backend-training"),
+            code: Lambda.Code.fromAsset("../alegra-pets-backend-training/lambdas/pet/create"),
             handler:"alegra-pets-lambda-create-pet.handler",
             runtime:Lambda.Runtime.NODEJS_16_X,
             layers:[commonLayer],
             environment: {
-                TABLA_NAME: PetTable.tableName
+                TABLA_NAME: PetTable.tableName,
+                S3_Bucket_Name: s3BucketName
             }
 
         });
         
         this.deletePet = new Lambda.Function(this,getDefaultResourceName(props,"lambda-DeletePet"),{
             functionName:getDefaultResourceName(props,"delete-pet"),
-            code:Lambda.Code.fromAsset("../alegra-pets-backend-training"),
+            code: Lambda.Code.fromAsset("../alegra-pets-backend-training/lambdas/pet/delete"),
             handler:"alegra-pets-lambda-delete-pet.handler",
             runtime:Lambda.Runtime.NODEJS_16_X,
             layers:[commonLayer],
@@ -64,7 +70,7 @@ export class LambdaStack extends cdk.Stack {
        
         this.searchPet = new Lambda.Function(this,getDefaultResourceName(props,"lambda-SearchPet"),{
             functionName:getDefaultResourceName(props,"search-pet"),
-            code:Lambda.Code.fromAsset("../alegra-pets-backend-training"),
+            code: Lambda.Code.fromAsset("../alegra-pets-backend-training/lambdas/pet/search"),
             handler:"alegra-pets-lambda-search-pet.handler",
             runtime:Lambda.Runtime.NODEJS_16_X,
             layers:[commonLayer],
@@ -75,12 +81,13 @@ export class LambdaStack extends cdk.Stack {
 
         this.updatePet = new Lambda.Function(this,getDefaultResourceName(props,"lambda-UpdatePet"),{
             functionName:getDefaultResourceName(props,"update-pet"),
-            code:Lambda.Code.fromAsset("../alegra-pets-backend-training"),
+            code: Lambda.Code.fromAsset("../alegra-pets-backend-training/lambdas/pet/update"),
             handler:"alegra-pets-lambda-update-pet.handler",
             runtime:Lambda.Runtime.NODEJS_16_X,
             layers:[commonLayer],
             environment: {
-                TABLA_NAME: PetTable.tableName
+                TABLA_NAME: PetTable.tableName,
+                S3_Bucket_Name: s3BucketName
             },
             
         });
