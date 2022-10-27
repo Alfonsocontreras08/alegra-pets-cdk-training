@@ -138,12 +138,12 @@ export class ApiGWStack extends cdk.Stack {
     
     petsID.addMethod("PATCH",
     new ApiGW.LambdaIntegration(adoptPet),{
-      requestValidator: new ApiGW.RequestValidator(this, "update-pet-validator", {
+      requestValidator: new ApiGW.RequestValidator(this, "adopt-pet-validator", {
         restApi: rest,
         validateRequestBody: true,
       }),
       requestModels:{
-        "application/json":AdoptPetModel(this,getDefaultResourceName(props,"model-update-pet"),rest)
+        "application/json":AdoptPetModel(this,getDefaultResourceName(props,"model-adopt-pet"),rest)
       },
       requestParameters: {
           "method.request.path.petId": true,
