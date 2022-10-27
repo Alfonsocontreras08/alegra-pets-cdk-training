@@ -4,9 +4,12 @@ import * as Lambda from "aws-cdk-lib/aws-lambda";
 
 import { getCdkPropsFromCustomProps, getDefaultResourceName } from '../utils';
 import { LambdaStackCustom, StackBasicProps } from '../interface';
+import { EncryptionOption } from 'aws-cdk-lib/aws-stepfunctions-tasks';
 
 export class LambdaStack extends cdk.Stack {
     public createEntity:Lambda.Function;
+    public searchEntity:Lambda.Function;
+
     public createPet:Lambda.Function;
     public deletePet:Lambda.Function;
     public searchPet:Lambda.Function;
@@ -46,6 +49,19 @@ export class LambdaStack extends cdk.Stack {
             },
         });
        
+
+        this.searchEntity = new Lambda.Function(this,getDefaultResourceName(props,"lambda-SearchEntity"),{
+            functionName:getDefaultResourceName(props,"search-entity"),
+            code: Lambda.Code.fromAsset("../alegra-pets-backend-training/lambdas/entity/search"),
+            handler:"alegra-pets-lambda-search-entity.handler",
+            runtime:Lambda.Runtime.NODEJS_16_X,
+            layers:[ commonLayer ],
+            environment: {
+                TABLA_NAME: EntityTable.tableName,
+            },
+        });
+
+
        this.createPet = new Lambda.Function(this,getDefaultResourceName(props,"lambda-CreatePet"),{
             functionName:getDefaultResourceName(props,"create-pet"),
             code: Lambda.Code.fromAsset("../alegra-pets-backend-training/lambdas/pet/create"),
@@ -53,7 +69,8 @@ export class LambdaStack extends cdk.Stack {
             runtime:Lambda.Runtime.NODEJS_16_X,
             layers:[commonLayer],
             environment: {
-                TABLA_NAME: PetTable.tableName,
+                TABLA_NAME_PET: PetTable.tableName,
+                TABLA_NAME_ENTITY: EntityTable.tableName,
                 S3_Bucket_Name: s3BucketName
             }
 
@@ -127,6 +144,9 @@ export class LambdaStack extends cdk.Stack {
      * entidad    
     */
     EntityTable.grantWriteData(this.createEntity);
+    EntityTable.grantReadData(this.createPet); //para consultar si existe la entidad antes de guardar el pet
+    EntityTable.grantReadData(this.searchEntity);
+    
     
   }
 }

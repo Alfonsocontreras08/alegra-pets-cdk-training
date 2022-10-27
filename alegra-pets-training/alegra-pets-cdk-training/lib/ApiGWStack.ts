@@ -13,14 +13,14 @@ import { createPetModel,updatePetModel } from "../model/pet";
 export class ApiGWStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: ApiStackCustom) {
     super(scope, id, getCdkPropsFromCustomProps(props));
-    const { createEntity, createPet, deletePet, searchPet, updatePet , adoptPet } = props.lambdaStack;
+    const { createEntity, searchEntity, createPet, deletePet, searchPet, updatePet , adoptPet } = props.lambdaStack;
 
 
     const rest = new ApiGW.RestApi(this,getDefaultResourceName(props,"ApiGW"),{
         deployOptions:{
             stageName: getDefaultResourceName(props,"ApiGW"),
         },
-        defaultCorsPreflightOptions: {
+        /*defaultCorsPreflightOptions: {
           allowHeaders: [
             'Content-Type',
             'X-Amz-Date',
@@ -37,7 +37,7 @@ export class ApiGWStack extends cdk.Stack {
           allowMethods: [ 'GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
           allowCredentials: true,
           allowOrigins:["*"]
-        }
+        }*/
     });
 
     /*
@@ -54,9 +54,9 @@ export class ApiGWStack extends cdk.Stack {
     });
     
 
-    const auth = new ApiGW.TokenAuthorizer(this, 'booksAuthorizer', {
+   /* const auth = new ApiGW.TokenAuthorizer(this, 'booksAuthorizer', {
       handler: authLambda,
-    });
+    });*/
 
     
     /*
@@ -80,7 +80,11 @@ export class ApiGWStack extends cdk.Stack {
 			authorizer: auth,*/
     })
 
-
+    entity.addMethod('GET', 
+      new ApiGW.LambdaIntegration(searchEntity),{
+        //authorizer: auth,
+        //authorizationType: ApiGW.AuthorizationType.CUSTOM,
+    });
     /*
      *
      * animales
@@ -111,8 +115,8 @@ export class ApiGWStack extends cdk.Stack {
 
     pets.addMethod('GET', 
       new ApiGW.LambdaIntegration(searchPet),{
-        authorizer: auth,
-        authorizationType: ApiGW.AuthorizationType.CUSTOM,
+        //authorizer: auth,
+        //authorizationType: ApiGW.AuthorizationType.CUSTOM,
         requestParameters: {
           "method.request.querystring.petId": false,
           "method.request.querystring.entityId": false,
@@ -130,11 +134,17 @@ export class ApiGWStack extends cdk.Stack {
 
 
     // /pets/{pets}
-    pets.addResource('{petId}');
-
-    pets.addMethod('DELETE', 
+    pets.addResource('{petId}')
+    .addMethod('DELETE', 
     new ApiGW.LambdaIntegration(deletePet),{
-      //authorizer: auth
+      //authorizer: auth,
+      requestParameters: {
+        "method.request.path.petId": true,
+      },
+      /*requestValidatorOptions: {
+          //requestValidatorName: "delete-pet-validator",
+          validateRequestParameters: true
+      }*/
     });
    
 
