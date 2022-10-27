@@ -3,8 +3,7 @@ import { Construct } from 'constructs';
 import * as Lambda from "aws-cdk-lib/aws-lambda";
 
 import { getCdkPropsFromCustomProps, getDefaultResourceName } from '../utils';
-import { LambdaStackCustom, StackBasicProps } from '../interface';
-import { EncryptionOption } from 'aws-cdk-lib/aws-stepfunctions-tasks';
+import { LambdaStackCustom } from '../interface';
 
 export class LambdaStack extends cdk.Stack {
     public createEntity:Lambda.Function;
@@ -119,8 +118,10 @@ export class LambdaStack extends cdk.Stack {
             code:Lambda.Code.fromAsset("../alegra-pets-backend-training/lambdas/pet/adopt"),
             handler:"alegra-pets-lambda-adopt-pet.handler",
             runtime:Lambda.Runtime.NODEJS_16_X,
+            layers:[commonLayer],
             environment: {
-                TABLA_NAME: PetTable.tableName
+                TABLA_NAME_PET: PetTable.tableName,
+                TABLA_NAME_ENTITY: EntityTable.tableName,
             }
         });
 
