@@ -44,17 +44,19 @@ export const updatePetModel = (scope:Construct,id:string,restApi:RestApi)=>{
     });
 }
 
-export const adoptPetModel = (scope:Construct,id:string,restApi:RestApi)=>{
+export const AdoptPetModel = (scope:Construct,id:string,restApi:RestApi)=>{
     return new apigateway.Model(scope, id, {
         contentType: "application/json",
         restApi:restApi,
         description: "validar request de adoptPet",
         schema: {
             type: JsonSchemaType.OBJECT,
-            required: [ "typePet"],
+            required: [ "entity_adopt"],
             properties: {
-                typePet:        { type: JsonSchemaType.STRING },
+                entity_adopt:   { type: JsonSchemaType.STRING },
+               
             },
         }
     });
 }
+

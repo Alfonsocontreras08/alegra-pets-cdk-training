@@ -7,7 +7,7 @@ import { getCdkPropsFromCustomProps, getDefaultResourceName } from '../utils';
 import { ApiStackCustom } from '../interface';
 import * as Lambda from 'aws-cdk-lib/aws-lambda';
 import { createEntityModel } from "../model/entity";
-import { createPetModel,updatePetModel } from "../model/pet";
+import { AdoptPetModel, createPetModel,updatePetModel } from "../model/pet";
 
 
 export class ApiGWStack extends cdk.Stack {
@@ -138,7 +138,16 @@ export class ApiGWStack extends cdk.Stack {
     
     petsID.addMethod("PATCH",
     new ApiGW.LambdaIntegration(adoptPet),{
-      
+      requestValidator: new ApiGW.RequestValidator(this, "update-pet-validator", {
+        restApi: rest,
+        validateRequestBody: true,
+      }),
+      requestModels:{
+        "application/json":AdoptPetModel(this,getDefaultResourceName(props,"model-update-pet"),rest)
+      },
+      requestParameters: {
+          "method.request.path.petId": true,
+      },
     });
     
     petsID.addMethod("PUT",
