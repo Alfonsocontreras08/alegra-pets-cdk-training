@@ -149,6 +149,8 @@ export class LambdaStack extends cdk.Stack {
     EntityTable.grantReadData(this.createPet); //para consultar si existe la entidad antes de guardar el pet
     EntityTable.grantReadData(this.searchEntity);
     EntityTable.grantReadData(this.updatePet);
+    EntityTable.grantReadData(this.adoptPet);
+    
 
     
   }
