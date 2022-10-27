@@ -105,7 +105,8 @@ export class LambdaStack extends cdk.Stack {
             runtime:Lambda.Runtime.NODEJS_16_X,
             layers:[commonLayer],
             environment: {
-                TABLA_NAME: PetTable.tableName,
+                TABLA_NAME_PET: PetTable.tableName,
+                TABLA_NAME_ENTITY: EntityTable.tableName,
                 S3_Bucket_Name: s3BucketName
             },
             
@@ -146,7 +147,8 @@ export class LambdaStack extends cdk.Stack {
     EntityTable.grantWriteData(this.createEntity);
     EntityTable.grantReadData(this.createPet); //para consultar si existe la entidad antes de guardar el pet
     EntityTable.grantReadData(this.searchEntity);
-    
+    EntityTable.grantReadData(this.updatePet);
+
     
   }
 }

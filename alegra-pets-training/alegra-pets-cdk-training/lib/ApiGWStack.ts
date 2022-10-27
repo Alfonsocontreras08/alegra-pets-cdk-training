@@ -85,33 +85,19 @@ export class ApiGWStack extends cdk.Stack {
         //authorizer: auth,
         //authorizationType: ApiGW.AuthorizationType.CUSTOM,
     });
+
+
+
+
+
+
     /*
      *
      * animales
      */
+    
     // /pets
     const pets = rest.root.addResource('pets');
-
-    
-
-    pets.addMethod("PUT",
-    new ApiGW.LambdaIntegration(adoptPet),{
-      
-    })
-    
-    pets.addMethod('POST', 
-    new ApiGW.LambdaIntegration(createPet),{
-      requestValidator: new ApiGW.RequestValidator(this, "create-pet-validator", {
-				restApi: rest,
-				validateRequestBody: true,
-			}),
-       requestModels:{
-        "application/json":createPetModel(this,getDefaultResourceName(props,"model-create-pet"),rest)
-      },			
-      /*
-			authorizationType: r.AuthorizationType.CUSTOM,
-			authorizer: auth,*/
-    });
 
     pets.addMethod('GET', 
       new ApiGW.LambdaIntegration(searchPet),{
@@ -131,20 +117,54 @@ export class ApiGWStack extends cdk.Stack {
         }
     });
 
+    pets.addMethod('POST', 
+    new ApiGW.LambdaIntegration(createPet),{
+      requestValidator: new ApiGW.RequestValidator(this, "create-pet-validator", {
+				restApi: rest,
+				validateRequestBody: true,
+			}),
+       requestModels:{
+        "application/json":createPetModel(this,getDefaultResourceName(props,"model-create-pet"),rest)
+      },			
+      /*
+			authorizationType: r.AuthorizationType.CUSTOM,
+			authorizer: auth,*/
+    });
+
 
 
     // /pets/{pets}
-    pets.addResource('{petId}')
-    .addMethod('DELETE', 
-    new ApiGW.LambdaIntegration(deletePet),{
-      //authorizer: auth,
-      requestParameters: {
-        "method.request.path.petId": true,
-      },
-      /*requestValidatorOptions: {
-          //requestValidatorName: "delete-pet-validator",
-          validateRequestParameters: true
-      }*/
+    const petsID = pets.addResource('{petId}')
+    
+    petsID.addMethod("PATCH",
+    new ApiGW.LambdaIntegration(adoptPet),{
+      
+    });
+    
+    petsID.addMethod("PUT",
+      new ApiGW.LambdaIntegration(updatePet),{
+        requestValidator: new ApiGW.RequestValidator(this, "update-pet-validator", {
+          restApi: rest,
+          validateRequestBody: true,
+        }),
+        requestModels:{
+          "application/json":updatePetModel(this,getDefaultResourceName(props,"model-update-pet"),rest)
+        },
+        requestParameters: {
+            "method.request.path.petId": true,
+        },	
+    });
+    
+    petsID.addMethod('DELETE', 
+      new ApiGW.LambdaIntegration(deletePet),{
+        //authorizer: auth,
+        requestParameters: {
+          "method.request.path.petId": true,
+        },
+        /*requestValidatorOptions: {
+            //requestValidatorName: "delete-pet-validator",
+            validateRequestParameters: true
+        }*/
     });
    
 
