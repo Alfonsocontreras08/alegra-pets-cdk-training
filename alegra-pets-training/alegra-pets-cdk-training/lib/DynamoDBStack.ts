@@ -3,6 +3,7 @@ import { Construct } from 'constructs';
 import * as DynamoDB from "aws-cdk-lib/aws-dynamodb";
 import { getCdkPropsFromCustomProps, getDefaultResourceName } from '../utils';
 import { StackBasicProps } from '../interface';
+import { CfnOutput } from 'aws-cdk-lib';
 
 export class DynamoDBStack extends cdk.Stack {
   
@@ -27,6 +28,12 @@ export class DynamoDBStack extends cdk.Stack {
       },
       tableName: getDefaultResourceName(props,"DynamoDBTable-entity")
     });
+    
+    //exportamos el nombre de la tabla de entity
+    new CfnOutput(this,"DynamoDBTable-entity-name",{
+      exportName:"DynamoDBTable-entity-name",
+      value:this.EntityTable.tableName
+    })
 
   }
 }

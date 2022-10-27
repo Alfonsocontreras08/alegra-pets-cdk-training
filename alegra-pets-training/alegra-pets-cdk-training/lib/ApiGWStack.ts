@@ -6,12 +6,14 @@ import * as ApiGW from "aws-cdk-lib/aws-apigateway";
 import { getCdkPropsFromCustomProps, getDefaultResourceName } from '../utils';
 import { ApiStackCustom } from '../interface';
 import * as Lambda from 'aws-cdk-lib/aws-lambda';
+import { createEntityModel } from "../model/entity";
+import { createPetModel,updatePetModel } from "../model/pet";
 
 
 export class ApiGWStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: ApiStackCustom) {
     super(scope, id, getCdkPropsFromCustomProps(props));
-    const { createEntity, createPet, deletePet, searchPet, updatePet } = props.lambdaStack;
+    const { createEntity, createPet, deletePet, searchPet, updatePet , adoptPet } = props.lambdaStack;
 
 
     const rest = new ApiGW.RestApi(this,getDefaultResourceName(props,"ApiGW"),{
@@ -38,7 +40,6 @@ export class ApiGWStack extends cdk.Stack {
         }
     });
 
-
     /*
     * Auth
     */ 
@@ -47,9 +48,9 @@ export class ApiGWStack extends cdk.Stack {
       code:Lambda.Code.fromAsset("../alegra-pets-backend-training/lambdas/authorizer"),
       handler:"alegra-pets-lambda-authorizer.handler",
       runtime:Lambda.Runtime.NODEJS_16_X,
-      /* environment: {
-          TABLA_NAME: EntityTable.tableName
-      }*/
+      environment: {
+          TABLA_NAME: cdk.Fn.importValue("DynamoDBTable-entity-name")
+      }
     });
     
 
@@ -67,8 +68,17 @@ export class ApiGWStack extends cdk.Stack {
 
     entity.addMethod('POST', 
     new ApiGW.LambdaIntegration(createEntity),{
-      //authorizer: auth
-    });
+      requestValidator: new ApiGW.RequestValidator(this, "create-entity-validator", {
+				restApi: rest,
+				validateRequestBody: true,
+			}),
+       requestModels:{
+        "application/json":createEntityModel(this,getDefaultResourceName(props,"model-create-entity"),rest)
+      },			
+      /*
+			authorizationType: r.AuthorizationType.CUSTOM,
+			authorizer: auth,*/
+    })
 
 
     /*
@@ -77,15 +87,44 @@ export class ApiGWStack extends cdk.Stack {
      */
     // /pets
     const pets = rest.root.addResource('pets');
+
+    
+
+    pets.addMethod("PUT",
+    new ApiGW.LambdaIntegration(adoptPet),{
+      
+    })
     
     pets.addMethod('POST', 
     new ApiGW.LambdaIntegration(createPet),{
-      //authorizer: auth
+      requestValidator: new ApiGW.RequestValidator(this, "create-pet-validator", {
+				restApi: rest,
+				validateRequestBody: true,
+			}),
+       requestModels:{
+        "application/json":createPetModel(this,getDefaultResourceName(props,"model-create-pet"),rest)
+      },			
+      /*
+			authorizationType: r.AuthorizationType.CUSTOM,
+			authorizer: auth,*/
     });
 
     pets.addMethod('GET', 
-    new ApiGW.LambdaIntegration(searchPet),{
-      authorizer: auth
+      new ApiGW.LambdaIntegration(searchPet),{
+        authorizer: auth,
+        authorizationType: ApiGW.AuthorizationType.CUSTOM,
+        requestParameters: {
+          "method.request.querystring.petId": false,
+          "method.request.querystring.entityId": false,
+          "method.request.querystring.ColorEquals": false,
+          "method.request.querystring.raceEquals": false,
+          "method.request.querystring.nameEquals": false,
+          "method.request.querystring.typeOfPetEquals": false,
+        },
+        requestValidatorOptions: {
+            requestValidatorName: "GetPet-validator",
+            validateRequestParameters: true,
+        }
     });
 
 
@@ -97,6 +136,11 @@ export class ApiGWStack extends cdk.Stack {
     new ApiGW.LambdaIntegration(deletePet),{
       //authorizer: auth
     });
+   
+
+
+    
+
 
     
   }

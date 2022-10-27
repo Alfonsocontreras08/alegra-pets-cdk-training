@@ -4,8 +4,6 @@ import * as Lambda from "aws-cdk-lib/aws-lambda";
 
 import { getCdkPropsFromCustomProps, getDefaultResourceName } from '../utils';
 import { LambdaStackCustom, StackBasicProps } from '../interface';
-import { CfnOutcome } from 'aws-cdk-lib/aws-frauddetector';
-import { CfnInclude } from 'aws-cdk-lib/cloudformation-include';
 
 export class LambdaStack extends cdk.Stack {
     public createEntity:Lambda.Function;
@@ -13,6 +11,8 @@ export class LambdaStack extends cdk.Stack {
     public deletePet:Lambda.Function;
     public searchPet:Lambda.Function;
     public updatePet:Lambda.Function;
+    public adoptPet:Lambda.Function;
+
 
     constructor(scope: Construct, id: string, props: LambdaStackCustom) {
         super(scope, id, getCdkPropsFromCustomProps(props));
@@ -29,9 +29,11 @@ export class LambdaStack extends cdk.Stack {
             description: 'lambda comun con uuid y sdk',
         });
 
-        const s3BucketName = cdk.Fn.importValue("s3-bucket-name-output");
+        
 
         //////// Funciones  /////
+        const s3BucketName = cdk.Fn.importValue("s3-bucket-name-output");
+        
         this.createEntity = new Lambda.Function(this,getDefaultResourceName(props,"lambda-CreateEntity"),{
             functionName:getDefaultResourceName(props,"create-entity"),
             code: Lambda.Code.fromAsset("../alegra-pets-backend-training/lambdas/entity/create"),
@@ -94,16 +96,21 @@ export class LambdaStack extends cdk.Stack {
 
        
         
-        /*const updatePet = new Lambda.Function(this,getDefaultResourceName(props,"lambda-UpdatePet"),{
-            functionName:getDefaultResourceName(props,"update-pet"),
-            code:Lambda.Code.fromAsset("../alegra-pets-backend-training"),
-            handler:"alegra-pets-lambda-update-pet.handler",
+        this.adoptPet = new Lambda.Function(this,getDefaultResourceName(props,"lambda-AdoptPet"),{
+            functionName:getDefaultResourceName(props,"adopt-pet"),
+            code:Lambda.Code.fromAsset("../alegra-pets-backend-training/lambdas/pet/adopt"),
+            handler:"alegra-pets-lambda-adopt-pet.handler",
             runtime:Lambda.Runtime.NODEJS_16_X,
             environment: {
                 TABLA_NAME: PetTable.tableName
             }
-        });*/
+        });
+
         
+
+
+
+
     //////////// permisos ///////
     /**
      * mascotas
@@ -113,6 +120,7 @@ export class LambdaStack extends cdk.Stack {
     PetTable.grantReadData(this.searchPet);
     PetTable.grantReadWriteData(this.deletePet);
     PetTable.grantReadWriteData(this.updatePet);
+    PetTable.grantReadWriteData(this.adoptPet);
     
 
     /**
