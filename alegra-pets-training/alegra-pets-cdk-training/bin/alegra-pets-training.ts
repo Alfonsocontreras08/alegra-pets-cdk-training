@@ -13,12 +13,13 @@ const app = new cdk.App();
 const appName = "alegra-pets"
 const account = app.node.tryGetContext('account-id');
 const environment = app.node.tryGetContext('env');
+const EmailLeader = app.node.tryGetContext('email-leader');
 
-
-if(account === undefined || environment === undefined ){
+if(account === undefined || environment === undefined){
   throw new Error("Env or environment not suppored");
+}else if(EmailLeader === undefined){
+  throw new Error("the field email is require")
 }
-
 
 const propsDefaultStack = {
   account,
@@ -55,7 +56,9 @@ new ApiGWStack(app,"ApiGWStack",{
 
 new SnsStack(app,"SnsStack",{
   ...propsDefaultStack,
-  name: `${appName}-SnsStack`
+  name: `${appName}-SnsStack`,
+  lambdaStack,
+  EmailLeader
 })
 /* If you don't specify 'env', this stack will be environment-agnostic.
    * Account/Region-dependent features and context lookups will not work,

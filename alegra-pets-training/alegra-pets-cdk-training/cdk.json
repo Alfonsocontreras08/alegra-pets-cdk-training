@@ -19,6 +19,8 @@
   "context": {
     "account-id" :"159688459304",
     "env" :"training",
+    "email-leader":"alfonso.contreras@alegra.com",
+    
     "@aws-cdk/aws-apigateway:usagePlanKeyOrderInsensitiveId": true,
     "@aws-cdk/core:stackRelativeExports": true,
     "@aws-cdk/aws-rds:lowercaseDbIdentifier": true,

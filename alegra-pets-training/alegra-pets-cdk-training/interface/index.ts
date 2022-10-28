@@ -21,5 +21,6 @@ export interface LambdaStackCustom extends StackBasicProps{
 }
 
 export interface SnsStackCustom extends StackBasicProps{
-   // DynamoDBStack: DynamoDBStack
+    EmailLeader:string,
+    lambdaStack: LambdaStack
 }

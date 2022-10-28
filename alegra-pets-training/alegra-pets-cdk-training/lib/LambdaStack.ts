@@ -122,6 +122,7 @@ export class LambdaStack extends cdk.Stack {
             environment: {
                 TABLA_NAME_PET: PetTable.tableName,
                 TABLA_NAME_ENTITY: EntityTable.tableName,
+                TOPIC_ARN_SNS:cdk.Fn.importValue('output-topic-sns-pet-happy-arn')
             }
         });
 
