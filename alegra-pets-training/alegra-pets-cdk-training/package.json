@@ -10,7 +10,8 @@
     "test": "jest",
     "cdk": "cdk",
     "deploy": "cdk deploy --all --profile items-training",
-    "deployLambda": "cdk deploy Lambda --profile items-training"
+    "deployLambda": "cdk deploy Lambda --profile items-training",
+    "deploySNS":"cdk deploy SnsStack --profile items-training"
   },
   "devDependencies": {
     "@types/jest": "^27.5.2",

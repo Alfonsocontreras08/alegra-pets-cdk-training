@@ -19,3 +19,7 @@ export interface ApiStackCustom extends StackBasicProps{
 export interface LambdaStackCustom extends StackBasicProps{
     DynamoDBStack: DynamoDBStack
 }
+
+export interface SnsStackCustom extends StackBasicProps{
+   // DynamoDBStack: DynamoDBStack
+}

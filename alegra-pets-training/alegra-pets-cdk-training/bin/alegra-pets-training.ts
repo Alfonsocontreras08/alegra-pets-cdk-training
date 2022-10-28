@@ -5,6 +5,7 @@ import { ApiGWStack } from '../lib/ApiGWStack';
 import { BucketS3Stack } from '../lib/BucketS3Stack';
 import { LambdaStack } from '../lib/LambdaStack';
 import { DynamoDBStack } from '../lib/DynamoDBStack';
+import { SnsStack } from '../lib/SnsStack';
 
 
 const app = new cdk.App();
@@ -52,8 +53,10 @@ new ApiGWStack(app,"ApiGWStack",{
 
 })
 
-
-
+new SnsStack(app,"SnsStack",{
+  ...propsDefaultStack,
+  name: `${appName}-SnsStack`
+})
 /* If you don't specify 'env', this stack will be environment-agnostic.
    * Account/Region-dependent features and context lookups will not work,
    * but a single synthesized template can be deployed anywhere. */
