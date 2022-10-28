@@ -110,6 +110,7 @@ export class ApiGWStack extends cdk.Stack {
           "method.request.querystring.raceEquals": false,
           "method.request.querystring.nameEquals": false,
           "method.request.querystring.typeOfPetEquals": false,
+          "method.request.querystring.entityOwnerEquals":false
         },
         requestValidatorOptions: {
             requestValidatorName: "GetPet-validator",
