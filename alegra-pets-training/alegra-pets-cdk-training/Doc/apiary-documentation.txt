@@ -1,0 +1,248 @@
+FORMAT: 1A
+HOST: https://polls.apiblueprint.org/
+
+# alegra-pet-training
+
+Polls is a simple API allowing consumers to view polls and vote in them.
+
+## Gestion Entidades [/entities]
+
+### Listar Entidades [GET]
+
++ Response 200 (application/json)
+
+        
+            {
+            "ok": true,
+            "Entities": [
+                {
+                    
+                    "id": "3608528b-b14e-4246-96ce-7c65fb73f116",
+                    "email": "kelaalke59@gmail.com",
+                    "name": "la castellana",
+                    "type": "foundation"
+                },
+                {
+                    
+                    "id": "3762f1a1-e867-4a47-87d8-dbc5812fbf60",
+                    "email": "kelaalke59@gmail.com",
+                    "name": "pedro perez",
+                    "type": "user"
+                },
+                
+                {
+                    
+                    "id": "565f2940-23f6-4831-907d-7c41441316a1",
+                    "email": "kelaalke59@gmail.com",
+                    "name": "la castellana",
+                    "type": "foundation"
+                }
+            ]
+        }
+        
+       
+### Crear Entidad [POST]
+
+permite crear una entidad de tipo usuario/fundacion
+
++ Request (application/json)
+    
+    + Headers
+        
+            Authorization: allow
+        
+    + Attributes (object)
+        
+        + name: camilito (required, string) - Nombre de entidad
+        + type: foundation (required, string) - Tipo de entidad ["user","foundation"]
+        + email: alfonso.contreras@alegra.com (required, string) - email
+       
+    
+    
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: /questions/2
+
+    + Body
+
+            {
+                "ok": true,
+                "body": "Registrado Correctamente"
+            }
+            
+
+
+
+## Gestion Mascotas [/pets]
+
+### Listar Mascotas [GET /{?petId,ColorEquals,raceEquals,nameEquals,entityOwnerEquals}]
+
+
++ Parameters
+    
+    - petId (string, `612c0f1e-04b4-41fe-9695-6cc67830aace`) ... opcional
+    - ColorEquals (string, `black`) ... opcional 
+    - raceEquals (string, `pitbull`)... opcional
+    - nameEquals (string, `ranger`)... opcional
+    - entityOwnerEquals (string, `612c0f1e-04b4-41fe-9695-6cc67830aace`) ... opcional
+
+
+
++ Response 200 (application/json)
+        
+    + Headers
+        
+            Authorization: allow
+        
+    
+    
+    + Body
+        
+            {
+                "ok": true,
+                "body": {
+                    "pets": [
+                        {
+                            "race": "dalmata",
+                            "typePet": "dog",
+                            "entity_owner": "4de0c450-8ae1-48e9-ae19-17154a1d001d",
+                            "id": "612c0f1e-04b4-41fe-9695-6cc67830aace",
+                            "name": "pepito1",
+                            "color": "black",
+                            "state": "Happy"
+                        }
+                    ]
+                }
+            }
+
+### Crear Mascota [POST]
+
+permite crear una Mascota
+
++ Request (application/json)
+    
+    + Headers
+        
+            Authorization: allow
+        
+
+    + Attributes (object)
+        
+        + name: "pepito" (required, string) - Nombre
+        + race: "dalmata" (required, string) - Rasa
+        + typePet: "dog" (required, string) - Tipo de animal
+        + entity_owner: "3608528b b14e 4246 96ce 7c65fb73f116" (required, string) - Fundacion propietaria del animal
+        + id: "612c0f1e 04b4 41fe 9695 6cc67830aace" (required, string) - Id Unico del Animal
+        + color: "blanco" (required, string) - Color del animal
+
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Authorization: allow
+
+    + Body
+
+            {
+                "ok": true,
+                "body": "Registrado Correctamente"
+            }
+            
+            
+## Gestion Mascotas por Id [/pets/{petId}]
+    
+
+            
+### Actualizar Mascota [PUT]
+
+permite actualizar los animales , excepto el id y el estado
+(todos los campos son obligatorios)
+
++ Parameters
+    
+    - petId (required, string, `612c0f1e-04b4-41fe-9695-6cc67830aace`) ... Es El Id de la mascota con la que se Interactuara
+
++ Request (application/json)
+    
+    + Headers
+        
+            Authorization: allow
+    
+    + Attributes (object)
+        
+        + name: "pepito" (required, string) - Nombre
+        + race: "dalmata" (required, string) - Rasa
+        + typePet: "dog" (required, string) - Tipo de animal
+        + entity_owner: "3608528b b14e 4246 96ce 7c65fb73f116" (required, string) - Fundacion propietaria del animal
+        + id: "612c0f1e 04b4 41fe 9695 6cc67830aace" (required, string) - Id Unico del Animal
+        + color: "blanco" (required, string) - Color del animal
+        
+
++ Response 200 (application/json)
+
+    + Body
+        
+            {
+                ok:true,
+                body:"Actualizado Correctamente"
+            }
+                        
+
+### Eliminar Mascota [DELETE]
+
+Elimina Una Mascota de la coleccion
+
++ Parameters
+    
+    - petId (required, string, `612c0f1e-04b4-41fe-9695-6cc67830aace`) ... Es El Id de la mascota con la que se Interactuara
+
+
++ Response 200 (application/json)
+
+    + Headers
+
+            Authorization: allow
+
+    + Body
+
+            {
+                "ok": true,
+                "body": "Mascota Eliminada Correctamente"
+            }
+
+
+### Adoptar Mascota [PATCH]
+
+puedes adoptar animales que otras fundaciones crean, 
+nota: solo pueden adoptar las entidades de tipo usuario
+
++ Parameters
+    
+    - petId (required, string, `612c0f1e-04b4-41fe-9695-6cc67830aace`) ... Es El Id de la mascota con la que se Interactuara
+
+
++ Request (application/json)
+    
+    + Headers
+        
+            Authorization: allow
+    
+    + Attributes (object)
+       
+        + entity_adopt: 3608528b b14e 4246 96c 7c65fb73f116 (required, string) - Usuario que adoptara la mascota. separado por "-"
+    
+
++ Response 200 (application/json)
+
+
+    + Body
+
+            {
+                "ok": true,
+                "body": "Mascota Adoptada Correctamente"
+            }            
+            

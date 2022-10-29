@@ -1,0 +1,287 @@
+{
+	"info": {
+		"_postman_id": "d0257673-2356-4cab-92df-f72d854cde21",
+		"name": "alegra-pet-training",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "entity",
+			"item": [
+				{
+					"name": "CreateEntity",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "allow",
+								"type": "default",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"la castellana\",\r\n    \"type\": \"foundationsss\",\r\n    \"email\":\"kelaalke59@gmail.com\",\r\n    \"password\":\"12345\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/entities",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"entities"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetEntityAll",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "allow",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/entities",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"entities"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "pet",
+			"item": [
+				{
+					"name": "DeletePet",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "allow",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/pets/078bdc84-4b29-4b53-b19d-00a8e302d66b",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"pets",
+								"078bdc84-4b29-4b53-b19d-00a8e302d66b"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreatePet",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "allow",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"entity_owner\":\"3762f1a1-e867-4a47-87d8-dbc5812fbf60\",\r\n    \"state\":\"sad\", \r\n    \"typePet\":\"dog\",\r\n    \"race\":\"none\",\r\n    \"color\":\"black\",\r\n    \"name\":\"firulais\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/pets",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"pets"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetPetAll",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "allow",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/pets",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"pets"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetPets",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "allow",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/pets",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"pets"
+							],
+							"query": [
+								{
+									"key": "petId",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "ColorEquals",
+									"value": "black",
+									"disabled": true
+								},
+								{
+									"key": "raceEquals",
+									"value": "dalmata",
+									"disabled": true
+								},
+								{
+									"key": "nameEquals",
+									"value": "pepito1",
+									"disabled": true
+								},
+								{
+									"key": "typeOfPetEquals",
+									"value": "dog",
+									"disabled": true
+								},
+								{
+									"key": "entityOwnerEquals",
+									"value": "4de0c450-8ae1-48e9-ae19-17154a1d001d",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetPetById",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "allow",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/pets?petId=b9e86262-9ae7-413b-90b3-1b0996c022b2",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"pets"
+							],
+							"query": [
+								{
+									"key": "petId",
+									"value": "b9e86262-9ae7-413b-90b3-1b0996c022b2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updatePet",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "adoptPet",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "allow",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"entity_adopt\":\"3762f1a1-e867-4a47-87d8-dbc5812ff60\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/pets/612c0f1e-04b4-41fe-9695-6cc67830aace",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"pets",
+								"612c0f1e-04b4-41fe-9695-6cc67830aace"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

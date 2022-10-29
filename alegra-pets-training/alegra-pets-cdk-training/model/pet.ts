@@ -54,7 +54,6 @@ export const AdoptPetModel = (scope:Construct,id:string,restApi:RestApi)=>{
             required: [ "entity_adopt"],
             properties: {
                 entity_adopt:   { type: JsonSchemaType.STRING },
-               
             },
         }
     });
