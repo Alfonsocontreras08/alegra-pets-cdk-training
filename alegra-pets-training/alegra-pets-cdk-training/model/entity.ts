@@ -10,12 +10,11 @@ export const createEntityModel = (scope:Construct,id:string,restApi:RestApi)=>{
         description: "validar request de createentity",
         schema: {
             type: JsonSchemaType.OBJECT,
-            required: ["name","type","email","password"],
+            required: ["name","type","email"],
             properties: {
                 name:       { type: JsonSchemaType.STRING },
                 type:       { type: JsonSchemaType.STRING },
                 email:      { type: JsonSchemaType.STRING },
-                password:   { type: JsonSchemaType.STRING },
             },
         }
     });
